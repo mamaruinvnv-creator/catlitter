@@ -26,3 +26,7 @@ Thumbs.db
 
 # Litter Scoop's own garbage bag (never commit scooped waste)
 .litter-box/
+
+# local auth/scratch logs
+*.log
+
