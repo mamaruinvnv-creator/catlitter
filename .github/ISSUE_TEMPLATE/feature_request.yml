@@ -1,0 +1,46 @@
+name: 💡 Feature / adapter request
+description: 新检测规则、新语言适配器、新清理位置
+title: "[feat] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 你想解决什么问题？
+      description: 请描述场景，而不是直接给实现方案
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: 所属模块
+      multiple: true
+      options:
+        - Python 检测规则
+        - JS/TS 检测规则
+        - 新语言适配器（Go/Java/Rust/…）
+        - janitor 系统垃圾清理
+        - 报告器（text/json/html）
+        - CLI / 配置
+        - 其他
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 你期望的方案
+    validations:
+      required: false
+  - type: textarea
+    id: examples
+    attributes:
+      label: 示例代码 / 参考项目
+      description: 有其他工具的类似实现也请贴链接
+    validations:
+      required: false
+  - type: checkboxes
+    id: pr
+    attributes:
+      label: 参与意愿
+      options:
+        - label: 我愿意提交 PR 实现这个功能

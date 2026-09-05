@@ -1,0 +1,57 @@
+name: 🐛 Bug report
+description: 误报、漏报、崩溃或恢复异常
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈！请尽量补全下面信息，方便快速定位。
+  - type: dropdown
+    id: kind
+    attributes:
+      label: 问题类型
+      options:
+        - 误报（把有用的代码判成冗余）
+        - 漏报（明明是死代码却没扫出来）
+        - scoop/restore 异常
+        - janitor 系统清理异常
+        - 崩溃 / 报错
+        - 报告显示问题
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 猫砂版本
+      description: "运行 `litter-scoop --version` 或 `pip show litter-scoop` 的结果"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: 操作系统与 Python 版本
+      placeholder: "Windows 11 / Python 3.12"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤 / 最小代码片段
+      description: 能稳定复现的最小代码或命令
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望行为 vs 实际行为
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 自查
+      options:
+        - label: 我已升级到最新版本
+        - label: 我确认问题来自猫砂本身（而非编辑器/其他工具）
