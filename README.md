@@ -13,6 +13,12 @@
 
 ---
 
+<p align="center">
+  <img src="assets/og-social.png" alt="猫砂 CatLitter — 像铲猫砂一样清理冗余代码" width="720">
+</p>
+
+---
+
 ## 这是什么？猫砂模型（CatLitter Model）
 
 > **把废物像铲猫砂一样铲进垃圾袋：先打包封存、记录在案，确认没问题再扔掉；后悔了随时原样复原。**
