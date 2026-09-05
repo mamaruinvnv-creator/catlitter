@@ -19,8 +19,24 @@ function Assert-Command($name) {
     }
 }
 
+# gh/git 走命令行网络，不读 Windows 注册表里的系统代理；若系统开了本地
+# 代理（Clash/v2ray 等），这里自动继承，避免 device-code 请求超时。
+function Use-SystemProxy {
+    if ($env:HTTPS_PROXY) { return }
+    $setting = Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings" -ErrorAction SilentlyContinue
+    if ($setting -and $setting.ProxyEnable -eq 1 -and $setting.ProxyServer) {
+        $proxy = ($setting.ProxyServer -split ';') | Where-Object { $_ -match '^https?=|^[\d\.]+:' } | Select-Object -First 1
+        $proxy = $proxy -replace '^https=', '' -replace '^http=', ''
+        if ($proxy -notmatch '://') { $proxy = "http://$proxy" }
+        $env:HTTPS_PROXY = $proxy
+        $env:HTTP_PROXY = $proxy
+        Write-Host "检测到系统代理，已为本次发布设置 HTTPS_PROXY=$proxy" -ForegroundColor Cyan
+    }
+}
+
 Assert-Command "git"
 Assert-Command "gh"
+Use-SystemProxy
 
 # 1. GitHub 登录状态
 $auth = gh auth status 2>&1
