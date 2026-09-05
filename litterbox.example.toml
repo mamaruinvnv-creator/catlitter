@@ -1,0 +1,19 @@
+# Litter Scoop 配置示例 —— 复制为 litterbox.toml 放到项目根目录即可生效
+[litterbox]
+bag_dir = ".litter-box"          # 垃圾袋目录名
+min_severity = "low"             # low | medium | high：只处理该置信度及以上的发现
+require_clean_git = true         # scoop 前要求 git 工作区干净（强烈建议）
+detect_commented_code = true     # 是否检测“被注释掉的代码块”
+max_file_bytes = 2000000         # 单文件解析大小上限
+exclude = ["docs/**", "generated/**", "migrations/**"]
+# include = ["src/**"]           # 设置后只扫描匹配的路径
+
+# 逐条规则开关（false = 关闭）
+[rules]
+# "commented-code" = false
+# "empty-stub" = false
+
+# 检测器总开关（false = 关闭整个语言/通用检测器）
+[adapters]
+# "web" = false
+# "generic" = false

@@ -1,0 +1,44 @@
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[project]
+name = "litter-scoop"
+version = "0.1.0"
+description = "猫砂模型：自动适配项目类型，检测冗余/死代码并铲入可恢复的垃圾袋 (cat-litter model for redundant-code cleanup)"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [{ name = "Litter Scoop Contributors" }]
+keywords = ["dead-code", "refactoring", "cleanup", "static-analysis", "cli", "redundancy"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4"]
+
+[project.scripts]
+litter-scoop = "litter_scoop.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/your-name/litter-scoop"
+Issues = "https://github.com/your-name/litter-scoop/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/litter_scoop"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

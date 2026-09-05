@@ -1,0 +1,6 @@
+{
+  "name": "sample-dirty-web",
+  "dependencies": {
+    "react": "^18.0.0"
+  }
+}

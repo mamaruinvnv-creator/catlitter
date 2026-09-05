@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Litter Scoop 猫砂扫描报告</title>
+<style>
+  :root {
+    --bg:#f6f8f7; --card:#ffffff; --ink:#1f2d2b; --muted:#6b7d79;
+    --teal:#0f8a7e; --teal-soft:#dff1ef;
+    --amber:#c77c12; --amber-soft:#fbeed3;
+    --red:#c0392b; --red-soft:#fbe1de;
+    --line:#e3e9e7;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;
+         background:var(--bg); color:var(--ink); line-height:1.55; }
+  .wrap { max-width:1180px; margin:0 auto; padding:28px 22px 60px; }
+  header h1 { margin:0 0 4px; font-size:24px; }
+  header .sub { color:var(--muted); font-size:13px; }
+  .grid { display:grid; gap:14px; }
+  .overview { grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); margin:18px 0; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px;
+           padding:16px 18px; }
+  .card-num { font-size:30px; font-weight:700; }
+  .card-label { color:var(--muted); font-size:13px; }
+  .sev-high .card-num { color:var(--red); }
+  .sev-medium .card-num { color:var(--amber); }
+  .sev-low .card-num { color:var(--teal); }
+  .panel { background:var(--card); border:1px solid var(--line); border-radius:12px;
+            padding:18px 20px; margin:14px 0; }
+  .panel h2 { margin:0 0 12px; font-size:16px; }
+  .meta { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:8px 22px; font-size:14px; }
+  .meta div b { color:var(--muted); font-weight:500; margin-right:8px; }
+  table { border-collapse:collapse; width:100%; font-size:13.5px; }
+  .lang-table td { padding:3px 10px 3px 0; }
+  .bar-row { display:grid; grid-template-columns:150px 1fr 46px; gap:10px;
+              align-items:center; margin:7px 0; }
+  .bar-label { font-size:13px; color:var(--ink); }
+  .bar-track { background:#edf2f0; border-radius:6px; height:14px; overflow:hidden; }
+  .bar-fill { display:block; height:100%; background:linear-gradient(90deg,#17a395,#0f8a7e); }
+  .bar-num { text-align:right; font-variant-numeric:tabular-nums; color:var(--muted); }
+  .controls { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:12px; }
+  .controls button, .controls select { font:inherit; font-size:13px; padding:6px 12px;
+       border:1px solid var(--line); border-radius:999px; background:#fff; cursor:pointer; }
+  .controls button.active { background:var(--teal); color:#fff; border-color:var(--teal); }
+  .findings { width:100%; }
+  .findings th { text-align:left; color:var(--muted); font-weight:600; font-size:12.5px;
+       padding:8px 10px; border-bottom:2px solid var(--line); }
+  .findings td { padding:10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  .path-cell { font-family:Consolas,monospace; font-weight:600; white-space:nowrap; }
+  .loc { color:var(--muted); font-weight:400; font-size:12px; }
+  .rule-id { color:var(--muted); font-size:11.5px; font-family:Consolas,monospace; }
+  .pill { display:inline-block; min-width:22px; text-align:center; border-radius:6px;
+       padding:2px 7px; font-size:12px; font-weight:700; }
+  .pill-high { background:var(--red-soft); color:var(--red); }
+  .pill-medium { background:var(--amber-soft); color:var(--amber); }
+  .pill-low { background:var(--teal-soft); color:var(--teal); }
+  .snippet { background:#f3f6f5; border-left:3px solid #b9d6d1; border-radius:6px;
+       padding:8px 10px; margin:7px 0 0; font-family:Consolas,monospace; font-size:12.5px;
+       white-space:pre-wrap; overflow-x:auto; }
+  .conf { font-variant-numeric:tabular-nums; color:var(--muted); }
+  .clean { text-align:center; padding:40px; color:var(--teal); font-size:18px; }
+  footer { color:var(--muted); font-size:12px; text-align:center; margin-top:26px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🧹 Litter Scoop 猫砂扫描报告</h1>
+    <div class="sub">生成时间 2026-09-05 15:34:03 · 项目根目录 C:\Users\Administrator\Doubao\chats\2026-09-05\new-chat-2\litter-scoop\tests\fixtures\sample_project</div>
+  </header>
+
+  <div class="grid overview">
+    <div class="card"><div class="card-num">22</div><div class="card-label">疑似冗余总数</div></div>
+    <div class="card sev-high">
+                  <div class="card-num">4</div>
+                  <div class="card-label">高置信度</div>
+                </div><div class="card sev-medium">
+                  <div class="card-num">12</div>
+                  <div class="card-label">中置信度</div>
+                </div><div class="card sev-low">
+                  <div class="card-num">6</div>
+                  <div class="card-label">低置信度</div>
+                </div>
+    <div class="card"><div class="card-num">9</div><div class="card-label">已扫描文件</div></div>
+  </div>
+
+  <div class="panel">
+    <h2>项目自动适配画像</h2>
+    <div class="meta">
+      <div><b>项目类型</b>node, python</div>
+      <div><b>框架</b>react</div>
+      <div><b>主力语言</b>python</div>
+      <div><b>启用检测器</b>python, web, generic</div>
+    </div>
+    <details style="margin-top:10px"><summary style="cursor:pointer;color:var(--muted);font-size:13px">语言代码行数</summary>
+      <table class="lang-table" style="margin-top:8px"><tr><td>python</td><td>71</td></tr><tr><td>javascript</td><td>23</td></tr></table>
+    </details>
+  </div>
+
+  <div class="panel">
+    <h2>冗余类型分布</h2>
+    <div class="bar-row" data-rule="unused-toplevel-symbol">
+              <span class="bar-label">未使用的顶层函数/类</span>
+              <span class="bar-track"><span class="bar-fill" style="width:100.0%"></span></span>
+              <span class="bar-num">6</span>
+            </div><div class="bar-row" data-rule="unused-import">
+              <span class="bar-label">未使用的导入</span>
+              <span class="bar-track"><span class="bar-fill" style="width:66.7%"></span></span>
+              <span class="bar-num">4</span>
+            </div><div class="bar-row" data-rule="commented-code">
+              <span class="bar-label">注释掉的代码</span>
+              <span class="bar-track"><span class="bar-fill" style="width:33.3%"></span></span>
+              <span class="bar-num">2</span>
+            </div><div class="bar-row" data-rule="unused-debug-statement">
+              <span class="bar-label">遗留调试语句</span>
+              <span class="bar-track"><span class="bar-fill" style="width:33.3%"></span></span>
+              <span class="bar-num">2</span>
+            </div><div class="bar-row" data-rule="duplicate-file">
+              <span class="bar-label">重复文件</span>
+              <span class="bar-track"><span class="bar-fill" style="width:16.7%"></span></span>
+              <span class="bar-num">1</span>
+            </div><div class="bar-row" data-rule="empty-file">
+              <span class="bar-label">空文件</span>
+              <span class="bar-track"><span class="bar-fill" style="width:16.7%"></span></span>
+              <span class="bar-num">1</span>
+            </div><div class="bar-row" data-rule="backup-file">
+              <span class="bar-label">备份残留文件</span>
+              <span class="bar-track"><span class="bar-fill" style="width:16.7%"></span></span>
+              <span class="bar-num">1</span>
+            </div><div class="bar-row" data-rule="duplicate-definition">
+              <span class="bar-label">重复定义</span>
+              <span class="bar-track"><span class="bar-fill" style="width:16.7%"></span></span>
+              <span class="bar-num">1</span>
+            </div><div class="bar-row" data-rule="empty-stub">
+              <span class="bar-label">空壳函数</span>
+              <span class="bar-track"><span class="bar-fill" style="width:16.7%"></span></span>
+              <span class="bar-num">1</span>
+            </div><div class="bar-row" data-rule="unused-local">
+              <span class="bar-label">未使用的局部变量</span>
+              <span class="bar-track"><span class="bar-fill" style="width:16.7%"></span></span>
+              <span class="bar-num">1</span>
+            </div><div class="bar-row" data-rule="unreachable-code">
+              <span class="bar-label">不可达代码</span>
+              <span class="bar-track"><span class="bar-fill" style="width:16.7%"></span></span>
+              <span class="bar-num">1</span>
+            </div><div class="bar-row" data-rule="unused-top-level-function">
+              <span class="bar-label">未使用的函数</span>
+              <span class="bar-track"><span class="bar-fill" style="width:16.7%"></span></span>
+              <span class="bar-num">1</span>
+            </div>
+  </div>
+
+  <div class="panel">
+    <h2>冗余明细（22）</h2>
+    <div class="controls">
+      <button class="active" data-filter-sev="all">全部</button>
+      <button data-filter-sev="high">仅高置信</button>
+      <button data-filter-sev="medium">中及以上</button>
+      <button data-filter-sev="low">仅低置信</button>
+      <select id="ruleSelect"><option value="all">全部规则</option><option value="unused-toplevel-symbol">未使用的顶层函数/类（6）</option><option value="unused-import">未使用的导入（4）</option><option value="commented-code">注释掉的代码（2）</option><option value="unused-debug-statement">遗留调试语句（2）</option><option value="duplicate-file">重复文件（1）</option><option value="empty-file">空文件（1）</option><option value="backup-file">备份残留文件（1）</option><option value="duplicate-definition">重复定义（1）</option><option value="empty-stub">空壳函数（1）</option><option value="unused-local">未使用的局部变量（1）</option><option value="unreachable-code">不可达代码（1）</option><option value="unused-top-level-function">未使用的函数（1）</option></select>
+    </div>
+    
+    <table class="findings">
+      <thead><tr><th>置信</th><th>位置</th><th>规则</th><th>说明 / 代码片段</th><th>得分</th></tr></thead>
+      <tbody>
+        <tr class="finding" data-sev="high" data-rule="duplicate-file">
+                  <td class="sev-cell"><span class="pill pill-high">高</span></td>
+                  <td class="path-cell">dup/b.txt<div class="loc">整文件</div></td>
+                  <td>重复文件<div class="rule-id">duplicate-file</div></td>
+                  <td>与 “dup/a.txt” 内容完全相同的重复文件
+                      
+                  </td>
+                  <td class="conf">97%</td>
+                </tr><tr class="finding" data-sev="high" data-rule="empty-file">
+                  <td class="sev-cell"><span class="pill pill-high">高</span></td>
+                  <td class="path-cell">empty.txt<div class="loc">整文件</div></td>
+                  <td>空文件<div class="rule-id">empty-file</div></td>
+                  <td>空文件（没有任何有效内容）
+                      
+                  </td>
+                  <td class="conf">99%</td>
+                </tr><tr class="finding" data-sev="medium" data-rule="backup-file">
+                  <td class="sev-cell"><span class="pill pill-medium">中</span></td>
+                  <td class="path-cell">legacy.md.bak<div class="loc">整文件</div></td>
+                  <td>备份残留文件<div class="rule-id">backup-file</div></td>
+                  <td>编辑器/版本控制遗留的备份文件（匹配 *.bak）
+                      
+                  </td>
+                  <td class="conf">95%</td>
+                </tr><tr class="finding" data-sev="medium" data-rule="unused-import">
+                  <td class="sev-cell"><span class="pill pill-medium">中</span></td>
+                  <td class="path-cell">src/app.py<div class="loc">2–2</div></td>
+                  <td>未使用的导入<div class="rule-id">unused-import</div></td>
+                  <td>导入的 “os” 在本文件中从未被使用
+                      <pre class="snippet">import os  # unused-import</pre>
+                  </td>
+                  <td class="conf">85%</td>
+                </tr><tr class="finding" data-sev="medium" data-rule="unused-import">
+                  <td class="sev-cell"><span class="pill pill-medium">中</span></td>
+                  <td class="path-cell">src/app.py<div class="loc">4–4</div></td>
+                  <td>未使用的导入<div class="rule-id">unused-import</div></td>
+                  <td>从 “sys” 导入的 “argv” 从未被使用
+                      <pre class="snippet">from sys import argv  # unused-import</pre>
+                  </td>
+                  <td class="conf">85%</td>
+                </tr><tr class="finding" data-sev="medium" data-rule="unused-toplevel-symbol">
+                  <td class="sev-cell"><span class="pill pill-medium">中</span></td>
+                  <td class="path-cell">src/app.py<div class="loc">14–15</div></td>
+                  <td>未使用的顶层函数/类<div class="rule-id">unused-toplevel-symbol</div></td>
+                  <td>顶层函数 “dead_function” 在整个项目中都没有被引用
+                      <pre class="snippet">def dead_function():  # unused anywhere in the project -&gt; waste
+    return 123</pre>
+                  </td>
+                  <td class="conf">70%</td>
+                </tr><tr class="finding" data-sev="medium" data-rule="unused-toplevel-symbol">
+                  <td class="sev-cell"><span class="pill pill-medium">中</span></td>
+                  <td class="path-cell">src/app.py<div class="loc">18–19</div></td>
+                  <td>未使用的顶层函数/类<div class="rule-id">unused-toplevel-symbol</div></td>
+                  <td>顶层类 “DeadClass” 在整个项目中都没有被引用
+                      <pre class="snippet">class DeadClass:  # unused anywhere -&gt; waste
+    pass</pre>
+                  </td>
+                  <td class="conf">70%</td>
+                </tr><tr class="finding" data-sev="medium" data-rule="unused-toplevel-symbol">
+                  <td class="sev-cell"><span class="pill pill-medium">中</span></td>
+                  <td class="path-cell">src/app.py<div class="loc">27–28</div></td>
+                  <td>未使用的顶层函数/类<div class="rule-id">unused-toplevel-symbol</div></td>
+                  <td>顶层函数 “duplicate” 在整个项目中都没有被引用
+                      <pre class="snippet">def duplicate():
+    return 1</pre>
+                  </td>
+                  <td class="conf">70%</td>
+                </tr><tr class="finding" data-sev="high" data-rule="duplicate-definition">
+                  <td class="sev-cell"><span class="pill pill-high">高</span></td>
+                  <td class="path-cell">src/app.py<div class="loc">31–32</div></td>
+                  <td>重复定义<div class="rule-id">duplicate-definition</div></td>
+                  <td>“duplicate” 在模块顶层被重复定义，前一个定义会被覆盖
+                      <pre class="snippet">def duplicate():  # duplicate-definition -&gt; waste</pre>
+                  </td>
+                  <td class="conf">90%</td>
+                </tr><tr class="finding" data-sev="medium" data-rule="unused-toplevel-symbol">
+                  <td class="sev-cell"><span class="pill pill-medium">中</span></td>
+                  <td class="path-cell">src/app.py<div class="loc">31–32</div></td>
+                  <td>未使用的顶层函数/类<div class="rule-id">unused-toplevel-symbol</div></td>
+                  <td>顶层函数 “duplicate” 在整个项目中都没有被引用
+                      <pre class="snippet">def duplicate():  # duplicate-definition -&gt; waste
+    return 2</pre>
+                  </td>
+                  <td class="conf">70%</td>
+                </tr><tr class="finding" data-sev="low" data-rule="empty-stub">
+                  <td class="sev-cell"><span class="pill pill-low">低</span></td>
+                  <td class="path-cell">src/app.py<div class="loc">35–37</div></td>
+                  <td>空壳函数<div class="rule-id">empty-stub</div></td>
+                  <td>“empty_one” 是空壳函数（只有 docstring 与 pass/…）
+                      <pre class="snippet">def empty_one():
+    &quot;&quot;&quot;an empty stub&quot;&quot;&quot;
+    pass</pre>
+                  </td>
+                  <td class="conf">55%</td>
+                </tr><tr class="finding" data-sev="medium" data-rule="unused-toplevel-symbol">
+                  <td class="sev-cell"><span class="pill pill-medium">中</span></td>
+                  <td class="path-cell">src/app.py<div class="loc">35–37</div></td>
+                  <td>未使用的顶层函数/类<div class="rule-id">unused-toplevel-symbol</div></td>
+                  <td>顶层函数 “empty_one” 在整个项目中都没有被引用
+                      <pre class="snippet">def empty_one():
+    &quot;&quot;&quot;an empty stub&quot;&quot;&quot;
+    pass</pre>
+                  </td>
+                  <td class="conf">70%</td>
+                </tr><tr class="finding" data-sev="medium" data-rule="unused-local">
+                  <td class="sev-cell"><span class="pill pill-medium">中</span></td>
+                  <td class="path-cell">src/app.py<div class="loc">42–42</div></td>
+                  <td>未使用的局部变量<div class="rule-id">unused-local</div></td>
+                  <td>局部变量 “unused_local” 赋值后从未被读取
+                      
+                  </td>
+                  <td class="conf">75%</td>
+                </tr><tr class="finding" data-sev="medium" data-rule="unused-toplevel-symbol">
+                  <td class="sev-cell"><span class="pill pill-medium">中</span></td>
+                  <td class="path-cell">src/app.py<div class="loc">48–50</div></td>
+                  <td>未使用的顶层函数/类<div class="rule-id">unused-toplevel-symbol</div></td>
+                  <td>顶层函数 “unreachable_demo” 在整个项目中都没有被引用
+                      <pre class="snippet">def unreachable_demo():
+    return 1
+    print(&quot;this can never run&quot;)</pre>
+                  </td>
+                  <td class="conf">70%</td>
+                </tr><tr class="finding" data-sev="high" data-rule="unreachable-code">
+                  <td class="sev-cell"><span class="pill pill-high">高</span></td>
+                  <td class="path-cell">src/app.py<div class="loc">50–50</div></td>
+                  <td>不可达代码<div class="rule-id">unreachable-code</div></td>
+                  <td>该语句位于 return/raise/break/continue 之后，永远不会执行
+                      <pre class="snippet">    print(&quot;this can never run&quot;)</pre>
+                  </td>
+                  <td class="conf">95%</td>
+                </tr><tr class="finding" data-sev="low" data-rule="commented-code">
+                  <td class="sev-cell"><span class="pill pill-low">低</span></td>
+                  <td class="path-cell">src/app.py<div class="loc">53–55</div></td>
+                  <td>注释掉的代码<div class="rule-id">commented-code</div></td>
+                  <td>连续 3 行被注释掉的代码，疑似废弃代码块
+                      <pre class="snippet"># def old_feature(a):
+#     result = a + 1
+#     return result</pre>
+                  </td>
+                  <td class="conf">60%</td>
+                </tr><tr class="finding" data-sev="medium" data-rule="unused-import">
+                  <td class="sev-cell"><span class="pill pill-medium">中</span></td>
+                  <td class="path-cell">web/tool.js<div class="loc">2–2</div></td>
+                  <td>未使用的导入<div class="rule-id">unused-import</div></td>
+                  <td>导入的 “unusedThing” 在本文件中从未被使用
+                      <pre class="snippet">import unusedThing from &#x27;./legacy.js&#x27;;</pre>
+                  </td>
+                  <td class="conf">80%</td>
+                </tr><tr class="finding" data-sev="medium" data-rule="unused-import">
+                  <td class="sev-cell"><span class="pill pill-medium">中</span></td>
+                  <td class="path-cell">web/tool.js<div class="loc">3–3</div></td>
+                  <td>未使用的导入<div class="rule-id">unused-import</div></td>
+                  <td>导入的 “axios” 在本文件中从未被使用
+                      <pre class="snippet">const axios = require(&#x27;axios&#x27;);</pre>
+                  </td>
+                  <td class="conf">80%</td>
+                </tr><tr class="finding" data-sev="low" data-rule="unused-top-level-function">
+                  <td class="sev-cell"><span class="pill pill-low">低</span></td>
+                  <td class="path-cell">web/tool.js<div class="loc">9–9</div></td>
+                  <td>未使用的函数<div class="rule-id">unused-top-level-function</div></td>
+                  <td>函数 “neverCalled” 声明后从未在本文件中被调用，且未导出
+                      <pre class="snippet">function neverCalled() {</pre>
+                  </td>
+                  <td class="conf">55%</td>
+                </tr><tr class="finding" data-sev="low" data-rule="commented-code">
+                  <td class="sev-cell"><span class="pill pill-low">低</span></td>
+                  <td class="path-cell">web/tool.js<div class="loc">13–15</div></td>
+                  <td>注释掉的代码<div class="rule-id">commented-code</div></td>
+                  <td>连续 3 行被注释掉的代码，疑似废弃代码块
+                      <pre class="snippet">// const oldVar = 1;
+// oldVar = oldVar + 2;
+// console.log(oldVar);</pre>
+                  </td>
+                  <td class="conf">55%</td>
+                </tr><tr class="finding" data-sev="low" data-rule="unused-debug-statement">
+                  <td class="sev-cell"><span class="pill pill-low">低</span></td>
+                  <td class="path-cell">web/tool.js<div class="loc">18–18</div></td>
+                  <td>遗留调试语句<div class="rule-id">unused-debug-statement</div></td>
+                  <td>遗留的调试语句（console.*/debugger）
+                      <pre class="snippet">console.log(&quot;debug here&quot;);</pre>
+                  </td>
+                  <td class="conf">90%</td>
+                </tr><tr class="finding" data-sev="low" data-rule="unused-debug-statement">
+                  <td class="sev-cell"><span class="pill pill-low">低</span></td>
+                  <td class="path-cell">web/tool.js<div class="loc">19–19</div></td>
+                  <td>遗留调试语句<div class="rule-id">unused-debug-statement</div></td>
+                  <td>遗留的调试语句（console.*/debugger）
+                      <pre class="snippet">debugger;</pre>
+                  </td>
+                  <td class="conf">90%</td>
+                </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer>Litter Scoop · 把冗余代码像猫砂一样铲进垃圾袋，可装袋、可记录、可恢复、可丢弃。</footer>
+</div>
+<script>
+(function() {
+  let sev = 'all';
+  const ruleSel = document.getElementById('ruleSelect');
+  const rows = Array.from(document.querySelectorAll('tr.finding'));
+  function apply() {
+    const rule = ruleSel ? ruleSel.value : 'all';
+    const order = {high:2, medium:1, low:0};
+    rows.forEach(r => {
+      const s = r.dataset.sev, rl = r.dataset.rule;
+      let okSev = sev === 'all' || (sev === 'medium' ? order[s] >= 1 : s === sev);
+      let okRule = rule === 'all' || rl === rule;
+      r.style.display = (okSev && okRule) ? '' : 'none';
+    });
+  }
+  document.querySelectorAll('[data-filter-sev]').forEach(btn => btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-filter-sev]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active'); sev = btn.dataset.filterSev; apply();
+  }));
+  if (ruleSel) ruleSel.addEventListener('change', apply);
+})();
+</script>
+</body>
+</html>
