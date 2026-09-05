@@ -1,8 +1,23 @@
-# Litter Scoop · 猫砂模型冗余代码清理器
+# 🐈 猫砂 CatLitter — 像铲猫砂一样清理冗余代码
 
-> **把废物像铲猫砂一样铲进垃圾袋：可以打包扔掉，也可以先记录、随时复原。**
+<p align="center">
+  <b>猫砂模型（CatLitter Model）冗余代码清理器 · The cat-litter redundant-code cleaner</b><br>
+  <i>Auto-detect your project, scoop dead code into a restorable garbage bag, and throw it away only when you are sure.</i><br><br>
+  <img alt="Python" src="https://img.shields.io/badge/python-3.11%2B-blue">
+  <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-green">
+  <img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-teal">
+  <img alt="tests" src="https://img.shields.io/badge/tests-22%20passed-brightgreen">
+  <br>
+  <b>⭐ 如果这个思路对你有启发，点个 Star 就是对作者最大的支持！</b>
+</p>
 
-`litter-scoop` 是一个零依赖的命令行工具与 Python 库：它会**自动识别你的项目类型**（Python / Node-TS-JS / Go / Rust / JVM / C 系 …），挑选最合适的冗余代码检测器，找出未使用的导入、死函数、不可达代码、注释掉的旧代码、空文件、重复文件、编辑器备份残留等"废物"，然后按 **猫砂模型（Cat-Litter Model）** 处理：
+---
+
+## 这是什么？猫砂模型（CatLitter Model）
+
+> **把废物像铲猫砂一样铲进垃圾袋：先打包封存、记录在案，确认没问题再扔掉；后悔了随时原样复原。**
+
+**猫砂（CatLitter）** 是一套清理冗余代码的方法论，本仓库是它的参考实现——零依赖的命令行工具（命令名 `litter-scoop`）与 Python 库：它会**自动识别你的项目类型**（Python / Node-TS-JS / Go / Rust / JVM / C 系 …），挑选最合适的冗余代码检测器，找出未使用的导入、死函数、不可达代码、注释掉的旧代码、空文件、重复文件、编辑器备份残留等"废物"，然后按**猫砂模型**处理：
 
 ```
                         ┌─────────────────────────────┐
@@ -51,8 +66,8 @@
 
 ```bash
 # 方式一：克隆后以可编辑模式安装（推荐开发者）
-git clone https://github.com/<your-name>/litter-scoop.git
-cd litter-scoop
+git clone https://github.com/mamaruinvnv-creator/catlitter.git
+cd catlitter
 pip install -e .
 
 # 方式二：直接用 pip（发布到 PyPI 后）
@@ -191,6 +206,21 @@ src/litter_scoop/
 - [ ] SARIF 输出，接入 GitHub Code Scanning
 - [ ] Go / Java / Rust 的 AST 级适配器（当前为通用词法规则）
 
+## English TL;DR
+
+**CatLitter** treats redundant code like cat litter: `scan` finds it, `scoop`
+seals a pristine copy into `.litter-box/` (fully restorable via `restore`),
+and only `empty` is irreversible. It auto-detects your project type, needs
+**zero dependencies**, runs on Python 3.11+, and covers Python (AST-based),
+JS/TS and language-agnostic waste. PRs and issues are welcome — and if you
+like the idea, please **⭐ Star** it.
+
+## 参与贡献
+
+Issue 报误报/漏报、PR 新语言适配器都非常欢迎。提交前请跑 `pytest` 保证全绿。
+
 ## License
 
 MIT，见 [LICENSE](LICENSE)。
+
+<p align="center"><b>觉得有用？点右上角 ⭐ Star 支持一下，这是猫砂持续铲屎的动力。</b></p>
