@@ -6,7 +6,7 @@
   <img alt="Python" src="https://img.shields.io/badge/python-3.11%2B-blue">
   <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-green">
   <img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-teal">
-  <img alt="tests" src="https://img.shields.io/badge/tests-22%20passed-brightgreen">
+  <img alt="tests" src="https://img.shields.io/badge/tests-37%20passed-brightgreen">
   <br>
   <b>⭐ 如果这个思路对你有启发，点个 Star 就是对作者最大的支持！</b>
 </p>
@@ -67,6 +67,7 @@
 - **三种报告**：终端彩色文本、机器可读 JSON、可离线打开、带筛选的单文件 HTML。
 - **零运行时依赖**，Python 3.11+ 即可，Windows / macOS / Linux 通吃。
 - 自动尊重 `.gitignore` / `.litterignore`，默认要求 git 工作区干净才动手。
+- **顺带铲屎电脑垃圾**（`janitor` 子命令）：同一套猫砂安全模型清理系统临时文件/包管理器缓存，支持计划任务定期执行。
 
 ## 安装
 
@@ -161,6 +162,67 @@ exclude = ["docs/**", "migrations/**"]
         └── src/app.py
 ```
 
+## 顺带铲屎：定期清理电脑垃圾（janitor）
+
+除了代码里的冗余，猫砂也能铲**电脑里的垃圾**——同一套"先装袋、可恢复、确认再删"的模型，系统垃圾默认封存在独立的全局垃圾袋 `~/.catlitter-janitor/`（可用 `CATLITTER_JANITOR_BAG` 或 `--bag-dir` 改位置），不污染任何项目。
+
+```bash
+# 1. 只读扫描：看看哪些目录有多少天前的旧垃圾（默认只统计 7 天前的文件）
+litter-scoop janitor scan
+litter-scoop janitor scan --json                       # 机器可读
+litter-scoop janitor scan --max-age-days 30            # 只看 30 天前的
+litter-scoop janitor scan --category user-temp npm-cache   # 只看指定类别
+
+# 2. 铲进系统垃圾袋（可恢复），先 --dry-run 预览
+litter-scoop janitor scoop --dry-run
+litter-scoop janitor scoop -y
+
+# 3. 查看 / 恢复 / 永久清空（与代码垃圾袋用法一致）
+litter-scoop janitor bags
+litter-scoop janitor restore <批次号> -y
+litter-scoop janitor empty -y
+
+# 4. 我心已决：直接删除超龄垃圾（定时任务用这个）
+litter-scoop janitor scoop --delete --max-age-days 7 -y
+
+# 5. 只清理我指定的目录（不碰系统默认位置）
+litter-scoop janitor scoop --no-default --extra-path D:/some/tmp -y
+```
+
+**默认白名单（只碰这些公认的垃圾位置，绝不碰用户文档）：**
+
+| 平台 | 类别 | 位置 |
+|---|---|---|
+| Windows | `user-temp` | `%TEMP%` 用户临时目录 |
+| Windows | `windows-temp` | `C:\Windows\Temp`（无权限自动跳过） |
+| Windows | `pip-cache` / `npm-cache` / `yarn-cache` | 各包管理器缓存 |
+| Windows | `thumbcache` | 资源管理器缩略图/图标缓存 |
+| Windows | `recycle-bin` | 回收站（**高风险，默认关闭，仅 `--delete` 模式**） |
+| macOS | `user-cache` | `~/Library/Caches`、`~/.npm` |
+| macOS | `trash` | 废纸篓（同上，默认关闭） |
+| Linux | `user-cache` / `tmp-files` | `~/.cache`、`/tmp`（只清当前用户拥有的文件） |
+| Linux | `trash` | `~/.local/share/Trash`（默认关闭） |
+
+**四重安全设计：**
+
+1. **白名单制**：只扫描上表固定位置，`--extra-path` 追加的目录也要显式给出；
+2. **年龄门槛**：默认只动 7 天前的文件，正在使用的临时文件绝不碰（`--max-age-days 0` 可关闭）；
+3. **默认装袋**：清理=移动到全局垃圾袋并记录清单，`restore` 原样移回；只有 `--delete` 才真删；
+4. **防链接逃逸**：不跟随符号链接/junction，并校验每个文件物理上确实位于白名单根目录内，防止链接把清理"引"到别处。
+
+### 定期自动清理
+
+```bash
+# 预览将要安装的计划任务（不安装）
+litter-scoop janitor schedule --print --freq weekly --at 10:00 --day SUN
+# 安装：Windows 写入任务计划程序（schtasks），macOS/Linux 写入 crontab
+litter-scoop janitor schedule --install --freq weekly --at 10:00
+# 卸载
+litter-scoop janitor schedule --uninstall
+```
+
+安装后每周日 10:00 自动执行 `janitor scoop -y --delete`（直接删除 7 天前的垃圾），日志写在 `~/.catlitter-janitor/janitor.log`。想更稳妥可把任务命令里的 `--delete` 去掉，改为先装袋、你想起来时再 `empty`。
+
 ## 作为 Python 库使用
 
 ```python
@@ -180,6 +242,16 @@ bag = GarbageBag(root, cfg)
 batch = bag.scoop([f for f in result.findings if f.severity.value != "low"])
 print(batch.batch_id)
 # bag.restore(batch.batch_id)
+
+# 系统垃圾清理（janitor）
+from litter_scoop import scan_system, JanitorBag
+from litter_scoop.janitor import discover_targets
+
+targets = discover_targets(only=["user-temp", "npm-cache"])
+report = scan_system(max_age_days=14, targets=targets)
+print(report.total_files, report.total_bytes)
+sys_bag = JanitorBag()                 # ~/.catlitter-janitor
+# batch = sys_bag.scoop(report.files)  # 装袋；sys_bag.restore(batch.batch_id)
 ```
 
 ## 开发
@@ -211,6 +283,7 @@ src/litter_scoop/
 - [ ] autofix 安全规则（仅 `unused-import` 直接重写）
 - [ ] SARIF 输出，接入 GitHub Code Scanning
 - [ ] Go / Java / Rust 的 AST 级适配器（当前为通用词法规则）
+- [ ] janitor：浏览器缓存清理（Chrome/Edge，默认关闭）、清理结果系统通知
 
 ## English TL;DR
 

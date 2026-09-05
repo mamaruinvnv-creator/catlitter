@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "litter-scoop"
-version = "0.1.0"
+version = "0.2.0"
 description = "猫砂 CatLitter：自动适配项目类型，把冗余/死代码铲进可恢复的垃圾袋 (auto-adapting redundant-code cleaner, cat-litter model)"
 readme = "README.md"
 requires-python = ">=3.11"
