@@ -109,6 +109,26 @@
 
 ---
 
+## 6.5 v0.2.0 更新帖（新功能：定期清电脑垃圾，适合发第二轮）
+
+**X / Twitter：**
+
+> Update: **CatLitter v0.2.0** is out 🐈
+>
+> It now scoops *computer* junk too — temp dirs, pip/npm caches, thumbnails — with the same safety model: bag first (restorable), delete only when sure. One command installs a weekly scheduled cleanup (schtasks/cron).
+>
+> Whitelist-only · age-gated · never follows symlinks · 37 tests green.
+>
+> ⭐ https://github.com/mamaruinvnv-creator/catlitter
+
+**即刻 / 朋友圈：**
+
+> 「猫砂」更新 v0.2.0：现在它不光铲冗余代码，还能定期铲电脑垃圾🐈
+> 临时文件、pip/npm 缓存、缩略图缓存……默认只清 7 天前的、先装进可恢复的垃圾袋、绝不跟符号链接走偏；一条命令装好每周定时清理。37 个测试全绿，还在自己机器上实战回滚了 5000 多个文件验证可恢复性。
+> github.com/mamaruinvnv-creator/catlitter 求 Star⭐
+
+---
+
 ## 7. GitHub 自家流量优化清单（影响 Star 转化，已完成/待办）
 
 - [x] 仓库一句话描述带核心关键词（dead code / redundant / restorable）
