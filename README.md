@@ -3,10 +3,12 @@
 <p align="center">
   <b>猫砂模型（CatLitter Model）冗余代码清理器 · The cat-litter redundant-code cleaner</b><br>
   <i>Auto-detect your project, scoop dead code into a restorable garbage bag, and throw it away only when you are sure.</i><br><br>
+  <a href="https://github.com/mamaruinvnv-creator/catlitter/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/mamaruinvnv-creator/catlitter/actions/workflows/ci.yml/badge.svg"></a>
   <img alt="Python" src="https://img.shields.io/badge/python-3.11%2B-blue">
   <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-green">
   <img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-teal">
   <img alt="tests" src="https://img.shields.io/badge/tests-37%20passed-brightgreen">
+  <a href="https://github.com/mamaruinvnv-creator/catlitter/releases"><img alt="GitHub release" src="https://img.shields.io/github/v/release/mamaruinvnv-creator/catlitter"></a>
   <br>
   <b>⭐ 如果这个思路对你有启发，点个 Star 就是对作者最大的支持！</b>
 </p>
